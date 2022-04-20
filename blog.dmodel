@@ -1,0 +1,14 @@
+entity Blog {
+	title: String
+	many posts: Post
+}
+
+entity Post extends hasAuthor {
+	title: String
+	content: String
+	many comments: Comment
+}
+
+entity Comment extends hasAuthor {
+	content: String
+}
