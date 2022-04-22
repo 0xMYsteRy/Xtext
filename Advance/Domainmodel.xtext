@@ -32,3 +32,18 @@ Operation:
         (',' params+=FullJvmFormalParameter)*)?')'
         ':' type=JvmTypeReference 
     body=XBlockExpression;
+    
+/*
+ * The following sequences of tokens are valid: 
+ * 		public static final
+ * 		static protected
+ * 		final private static
+ * 		public
+ * The visibility is mandatory, while static or final are optional
+ */
+ 
+Modifier: 
+    static?='static'? & final?='final'? & visibility=Visibility;
+ 
+enum Visibility:
+    PUBLIC='public' | PRIVATE='private' | PROTECTED='protected';
