@@ -1,0 +1,50 @@
+grammar org.example.domainmodel.Domainmodel with org.eclipse.xtext.xbase.Xbase
+
+generate domainmodel "http://www.example.org/domainmodel/Domainmodel"
+
+/*
+ *0 or 1 (operator ?), 0 or many (operator *), 1 or many (operator +)
+ */
+ 
+Domainmodel:
+    importSection=XImportSection? // Organized import from API
+    elements+=AbstractElement*;
+ 
+AbstractElement:
+    PackageDeclaration | Class;
+ 
+PackageDeclaration:
+    'package' name=QualifiedName '{'
+        elements+=AbstractElement*
+    '}';
+
+Class:
+//	modifier+=Modifier?
+    'class' name=ValidID ('extends' superType=JvmTypeReference)? '{'
+        features+=Feature*
+    '}' 
+    ;
+    
+Feature:
+    Property | Operation ;
+    
+DataType:
+    'dataType' name = ID;
+    
+Property:
+    name=ValidID ':' type=JvmTypeReference;
+ 
+Operation:
+    'fun' name=ValidID // Function key word
+        '('(params+=FullJvmFormalParameter 
+        (',' params+=FullJvmFormalParameter)*)?')'
+        ':' type=JvmTypeReference 
+    body=XBlockExpression;
+
+// Unordered group modifier   
+Modifier: 
+    static?='static'? & final?='final'? & visibility=Visibility;
+
+// Access modifier 
+enum Visibility:
+    PUBLIC='public' | PRIVATE='private' | PROTECTED='protected';
