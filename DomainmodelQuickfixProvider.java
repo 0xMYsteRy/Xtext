@@ -32,3 +32,5 @@ public class DomainmodelQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 }
+
+// Debug shell: context.getXtextDocument().get()
