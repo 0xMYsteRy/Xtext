@@ -1,0 +1,71 @@
+grammar org.example.domainmodel.Domainmodel with org.eclipse.xtext.xbase.Xbase
+ 
+generate domainmodel "http://www.example.org/domainmodel/Domainmodel"
+ 
+/*
+ *0 or 1 (operator ?), 0 or many (operator *), 1 or many (operator +)
+ */
+ 
+Domainmodel:
+    importSection=XImportSection? // Organized import from API
+    elements+=AbstractElement*;
+ 
+AbstractElement:
+    PackageDeclaration | Class;
+ 
+PackageDeclaration:
+    'package' name=QualifiedName '{'
+        elements+=AbstractElement*
+    '}';
+
+Class:
+	modifier+=Modifier?
+    'class' name=ValidID ('extends' superType=JvmTypeReference)? '{'
+        features+=Feature*
+        dataElements+=DatatypeCall*
+    '}' 
+;
+    
+Feature:
+    Property | Operation ;
+    
+//DataType:
+//    'dataType' name = ID;
+    
+Property:
+    name=ValidID ':' type=JvmTypeReference;
+ 
+Operation:
+    type=JvmTypeReference? 
+    'method' name=ValidID // Function key word
+        '('(params+=FullJvmFormalParameter 
+        (',' params+=FullJvmFormalParameter)*)?')'
+        
+    body=XBlockExpression;
+
+// Unordered group modifier   
+//DatatypeCallModifier:
+//	static?='static'? & final?='final'? & visibility=Visibility & DatatypeCall;
+
+
+Modifier: 
+    static?='static'? & final?='final'? & visibility=Visibility;
+
+DatatypeCall:
+	StringDataType | IntegerDataType | BooleanDataType | RealDataType;
+
+StringDataType:
+	'String' name = ID ';' | {StringDataType} QualifiedName;
+IntegerDataType:
+	'Integer' name = ID ';' | {IntegerDataType} QualifiedName ;
+BooleanDataType:
+	'Boolean' name = ID ';' | {BooleanDataType} QualifiedName;
+RealDataType:
+	'Real' name = ID ';' | {RealDataType} QualifiedName;
+
+// Access modifier 
+enum Visibility:
+    PUBLIC='public' | PRIVATE='private' | PROTECTED='protected';
+    
+//enum DataType:
+//	STRING='String' | INTEGER='integer' | REAL = 'real' ;
