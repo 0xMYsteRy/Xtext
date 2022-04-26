@@ -1,0 +1,17 @@
+private class PersonalID {
+	String name;
+   	Integer age;
+   	Boolean isMale;
+   	Real myIncome;
+    
+}
+
+private final static class Testing {
+	void method sayHello(){
+		return "Hello"
+	}
+	
+	int method getIncome(int myIncome) {
+		return myIncome
+	}
+}
